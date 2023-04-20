@@ -2,10 +2,11 @@
 
 const { DataTypes, Sequelize } = require("sequelize");
 
-const sequelize = new Sequelize({
-	dialect: "sqlite",
+const { MYSQL_DB, MYSQL_USER, MYSQL_PASSWORD, MYSQL_HOST } = process.env;
+const sequelize = new Sequelize(MYSQL_DB, MYSQL_USER, MYSQL_PASSWORD, {
+	dialect: "mysql",
+	host: MYSQL_HOST,
 	logging: process.env.NODE_ENV !== "production" && console.log,
-	storage: "/etc/produce/db.sqlite",
 });
 
 const Produce = sequelize.define("Produce", {

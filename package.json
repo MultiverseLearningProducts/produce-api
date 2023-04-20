@@ -13,8 +13,8 @@
 	"license": "ISC",
 	"dependencies": {
 		"express": "^4.18.2",
-		"sequelize": "^6.31.0",
-		"sqlite3": "^5.1.6"
+		"mysql2": "^3.2.3",
+		"sequelize": "^6.31.0"
 	},
 	"devDependencies": {
 		"nodemon": "^2.0.22"
