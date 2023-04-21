@@ -1,6 +1,7 @@
 "use strict";
 
 const express = require("express");
+const waitPort = require("wait-port");
 const { Produce, sequelize } = require("./sequelize");
 
 const app = express();
@@ -78,9 +79,29 @@ app.delete("/:id", async (req, res, next) => {
 	}
 });
 
-const PORT = 3000;
+(async function () {
+	const { MYSQL_HOST } = process.env;
+	const MYSQL_PORT = 3306;
+	const FIVE_SECONDS = 5000;
 
-app.listen(PORT, async () => {
-	await sequelize.sync();
-	console.log(`Listening on port ${PORT}`);
-});
+	try {
+		const { open } = await waitPort({
+			host: MYSQL_HOST,
+			port: MYSQL_PORT,
+			timeout: FIVE_SECONDS,
+		});
+
+		if (!open) {
+			throw new Error("The port failed to open before the timeout!");
+		}
+
+		await sequelize.sync();
+
+		const APP_PORT = 3000;
+		app.listen(APP_PORT, () => {
+			console.log(`Listening on port ${APP_PORT}`);
+		});
+	} catch (error) {
+		console.error(error);
+	}
+})();
